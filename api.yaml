@@ -1,0 +1,351 @@
+swagger: "2.0"
+info: 
+  title: My Brand API swagger Docs
+  version: 1.0
+server: 
+  - url: 'http://localhost:5000'
+
+schemes: [http, https]
+
+paths:
+#Admin sign up
+  /api/v1/signup:
+    post:
+      summary: Admin sign up
+      tags:
+        - Sign up and Signing managing APIs
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: formData
+          name: email
+          type: string
+          required: true
+          description: User email
+        - in: formData
+          name: password
+          type: string
+          required: true
+          description: User password
+      responses:
+        200:
+          schema:
+            type: object
+
+#Admin login
+  /api/v1/login:
+    post:
+      summary: Admin login
+      tags:
+        - Sign up and Signing managing APIs
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: formData
+          name: email
+          type: string
+          required: true
+          description: User email
+        - in: formData
+          name: password
+          type: string
+          required: true
+          description: User password
+      responses:
+        200:
+          schema:
+            type: object
+        
+
+# Create new blog
+  /api/v1/blogs:
+    post:
+      summary: Creates new blog
+      tags:
+        - Blogs managing APIs
+      consumes:
+        - multipart/form-data
+      parameters:
+        - in: formData
+          name: title
+          type: string
+          description: Title of the blog
+          required: true
+        - in: formData
+          name: content
+          type: string
+          required: true
+          description: Content of the blog
+        - in: formData
+          name: image
+          type: file
+          description: upload image
+        - in: header
+          name: Authorization
+          type: string
+          description: secret-token
+      responses:
+        200:
+          shema:
+            type: object
+        401:
+          schema:
+            type: string
+        500:
+          description: Something went wrong, try again
+
+    get:
+      summary: Returns all the blogs
+      tags:
+        - Blogs managing APIs
+      responses:
+        200:
+          description: All blogs
+          schema:
+            type: array
+            example:
+              id: 63a9dc81564d50140ff74e57
+              title: JavaScript Tutorial
+              content: Learn JS lay now!
+        404: 
+          description: No records found
+
+        500:
+          description: Somthing went wrong, try again
+
+#Get blog by id
+  /api/v1/blogs/{id}:
+    get:
+      summary: Returns the blog by id
+      tags:
+        - Blogs managing APIs
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: The blog by id
+          schema:
+            type: object
+            example:
+              id: 63a9dc81564d50140ff74e57
+              title: JavaScript Tutorial
+              content: Learn JS lay now!
+        404: 
+          description: No record found
+
+        500:
+          description: Somthing went wrong, try again
+
+    patch:
+      summary: Update the blog
+      tags:
+        - Blogs managing APIs
+      consumes:
+        - multipart/form-data
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string 
+        - in: formData
+          name: title
+          type: string
+          description: Title of the blog
+          required: true
+        - in: formData
+          name: content
+          type: string
+          required: true
+          description: Content of the blog
+        - in: formData
+          name: image
+          type: file
+          description: upload image
+        - in: header
+          name: Authorization
+          type: string
+          description: secret-token
+      responses:
+        200:
+          shema:
+            type: object
+        401:
+          schema:
+            type: string
+        500:
+          description: Something went wrong, try again
+    
+    delete:
+      summary: Delete the blog
+      tags:
+        - Blogs managing APIs
+      consumes:
+        - application/form-data
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - in: header
+          name: Authorization
+          type: string
+          description: secret-token
+      responses:
+        200:
+          schema:
+            type: object
+        404: 
+          description: No record found
+
+        500:
+          description: Somthing went wrong, try again
+
+#Add comments
+  /api/v1/blogs/{id}/comments:
+    post:
+      summary: Add comment
+      tags:
+        - Comments and Likes managing APIs
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - in: body
+          name: user
+          schema:
+            type: object
+            properties:
+              user:
+                type: string
+                required: true
+                description: User name
+              email:
+                type: string
+                required: true
+                description: User email
+              comment:
+                type: string
+                required: true
+                description: Comment
+      responses:
+        200:
+          schema:
+            type: object
+        500:
+          description: Somthing went wrong, try again
+
+#Add likes on the blog
+  /api/v1/blogs/{id}/likes:
+    post:
+      summary: Add like on blog
+      tags:
+        - Comments and Likes managing APIs
+      consumes:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          schema:
+            type: object
+        404:
+          schema:
+            type: object
+        500:
+          description: Somthing went wrong, try again
+    get:
+      summary: Returns likes of the blog
+      tags:
+        - Comments and Likes managing APIs
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Likes of the blog
+          schema:
+            type: object
+            example:
+              id: 63a9dc81564d50140ff74e57
+              title: JavaScript Tutorial
+              content: Learn JS lay now!
+        404: 
+          schema:
+            type: object
+
+        500:
+          description: Somthing went wrong, try again
+
+#Send message
+  /api/v1/messages:
+    post:
+      summary: Send message
+      tags:
+        - Messages managing APIs
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          schema:
+            type: object
+            properties:
+              userName:
+                type: string
+                required: true
+                description: User name
+              email:
+                type: string
+                required: true
+                description: User email
+              message:
+                type: string
+                required: true
+                description: Message
+      responses:
+        200:
+          schema:
+            type: object
+        500:
+          description: Somthing went wrong, try again
+    get:
+      summary: Read messages
+      tags:
+        - Messages managing APIs
+      consumes:
+        - application/json
+      parameters:
+         - in: header
+           name: Authorization
+           type: string
+           description: secret-token
+      responses:
+        200:
+          description: All messages
+          schema:
+            type: array
+        404: 
+          description: No records found
+        500:
+          description: Somthing went wrong, try again

@@ -1,0 +1,16 @@
+version: 2.1
+jobs:
+  build:
+    working_directory: ~/repo
+    docker:
+      - image: cimg/node:14.20.0
+      - image: mongo:4.1.0
+    steps:
+      - checkout:
+             path: ~/repo
+      - run:
+          name: install dependencies
+          command: npm install
+      - run:
+          name: run app test
+          command: npm test

@@ -1,2 +1,2 @@
-# myBrandAPIs
-My brand endpoint implementation
+# my-brand-backend
+Endpoints of My Brand
